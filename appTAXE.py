@@ -5,7 +5,7 @@ import pandas as pd
 # Chargement du fichier de base depuis GitHub
 @st.cache_data
 def load_base_data():
-    base_url = "https://github.com/sedhadcci/Apptaxe/raw/main/ListeprefectoralBASE.xlsx"
+    base_url = "https://github.com/sedhadcci/Applisteprefectorale/raw/main/ListeprefectoralBASE.xlsx"
     return pd.read_excel(base_url, header=None)
 
 # Fonction pour effectuer la correspondance
@@ -22,7 +22,9 @@ uploaded_file = st.file_uploader("Choisissez un fichier texte avec les codes", t
 if uploaded_file:
     input_txt = uploaded_file.read().decode("utf-8")
     input_codes = input_txt.strip().split('\n')
-    
+
+    st.write("Codes lus depuis le fichier :", input_codes)  # Point de contrôle 1
+
     base_df = load_base_data()
     base_df.dropna(subset=[0], inplace=True)
 
@@ -34,9 +36,8 @@ if uploaded_file:
 
     # Effectuer la correspondance
     result_df = perform_lookup(input_codes, base_df_filtered)
-
-    # Afficher le résultat
-    st.write(result_df)
+    
+    st.write("DataFrame résultant :", result_df)  # Point de contrôle 2
 
     # Option pour télécharger le fichier résultant
     output = io.BytesIO()
