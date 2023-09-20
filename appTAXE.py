@@ -17,13 +17,12 @@ def perform_lookup(input_codes, base_df):
 # Interface Streamlit
 st.title("Application pour correspondance de CODE")
 
-uploaded_file = st.file_uploader("Choisissez un fichier Excel avec les codes", type=["xlsx"])
+uploaded_file = st.file_uploader("Choisissez un fichier texte avec les codes", type=["txt"])
 
 if uploaded_file:
-    input_df = pd.read_excel(uploaded_file, usecols="A")
-    input_df.dropna(inplace=True)
-    input_codes = input_df.iloc[:, 0].tolist()
-
+    input_txt = uploaded_file.read().decode("utf-8")
+    input_codes = input_txt.strip().split('\n')
+    
     base_df = load_base_data()
     base_df.dropna(subset=[0], inplace=True)
 
@@ -32,9 +31,12 @@ if uploaded_file:
 
     # Filtrer les colonnes
     base_df_filtered = base_df.iloc[:, base_columns]
-
+    
     # Renommer les colonnes
     base_df_filtered.columns = ['CODE', 'SIRET PREF', 'RAISON SOCIALE', 'UAI 1', 'UAI 2', 'Adresse', 'Code postal', 'Ville', 'LIBELLE FORMATION', 'ADRESSE MAIL']
+    
+    # Vérifier si les colonnes ont bien été renommées
+    st.write(base_df_filtered.head())
 
     # Effectuer la correspondance
     result_df = perform_lookup(input_codes, base_df_filtered)
