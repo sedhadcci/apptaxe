@@ -17,13 +17,12 @@ def perform_lookup(input_codes, base_df):
 # Interface Streamlit
 st.title("Application pour correspondance de CODE")
 
-uploaded_file = st.file_uploader("Choisissez un fichier texte avec les codes", type=["txt"])
+uploaded_file = st.file_uploader("Choisissez un fichier Excel avec les codes", type=["xlsx"])
 
 if uploaded_file:
-    input_txt = uploaded_file.read().decode("utf-8")
-    input_codes = input_txt.strip().split('\n')
-
-    st.write("Codes lus depuis le fichier :", input_codes)  # Point de contrôle 1
+    input_df = pd.read_excel(uploaded_file, usecols="A")
+    input_df.dropna(inplace=True)
+    input_codes = input_df.iloc[:, 0].tolist()
 
     base_df = load_base_data()
     base_df.dropna(subset=[0], inplace=True)
@@ -36,8 +35,9 @@ if uploaded_file:
 
     # Effectuer la correspondance
     result_df = perform_lookup(input_codes, base_df_filtered)
-    
-    st.write("DataFrame résultant :", result_df)  # Point de contrôle 2
+
+    # Afficher le résultat
+    st.write(result_df)
 
     # Option pour télécharger le fichier résultant
     output = io.BytesIO()
@@ -50,3 +50,4 @@ if uploaded_file:
         file_name="resultat_correspondance.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
+
