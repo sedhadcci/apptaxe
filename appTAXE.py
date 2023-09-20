@@ -33,6 +33,9 @@ if uploaded_file:
     # Filtrer les colonnes
     base_df_filtered = base_df.iloc[:, base_columns]
 
+    # Renommer les colonnes
+    base_df_filtered.columns = ['CODE', 'SIRET PREF', 'RAISON SOCIALE', 'UAI 1', 'UAI 2', 'Adresse', 'Code postal', 'Ville', 'LIBELLE FORMATION', 'ADRESSE MAIL']
+
     # Effectuer la correspondance
     result_df = perform_lookup(input_codes, base_df_filtered)
 
@@ -50,4 +53,3 @@ if uploaded_file:
         file_name="resultat_correspondance.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
-
