@@ -20,10 +20,9 @@ st.title("Application pour correspondance de CODE")
 uploaded_file = st.file_uploader("Choisissez un fichier Excel avec les codes", type=["xlsx"])
 
 if uploaded_file:
-    input_df = pd.read_excel(uploaded_file, usecols="A")
-    input_df.dropna(inplace=True)
-    input_codes = input_df.iloc[:, 0].tolist()
-
+    input_df = pd.read_excel(uploaded_file)
+    input_codes = input_df.iloc[:, 0].dropna().tolist()
+    
     base_df = load_base_data()
     base_df.dropna(subset=[0], inplace=True)
 
@@ -32,6 +31,9 @@ if uploaded_file:
 
     # Filtrer les colonnes
     base_df_filtered = base_df.iloc[:, base_columns]
+
+    # Renommer les colonnes
+    base_df_filtered.columns = ['CODE', 'SIRET PREF', 'RAISON SOCIALE', 'UAI 1', 'UAI 2', 'Adresse', 'Code postal', 'Ville', 'LIBELLE FORMATION', 'ADRESSE MAIL']
 
     # Effectuer la correspondance
     result_df = perform_lookup(input_codes, base_df_filtered)
