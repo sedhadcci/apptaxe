@@ -37,13 +37,18 @@ if uploaded_file:
     # Effectuer la correspondance
     result_df = perform_lookup(input_codes, base_df_filtered)
 
+    # Ajouter les résultats à partir de la colonne Z dans le DataFrame original
+    input_df = pd.concat([input_df, result_df.reset_index(drop=True)], axis=1, ignore_index=True)
+    start_col = ord('Z') - ord('A')  # Position de la colonne Z dans l'index (25)
+    input_df.columns = list(input_df.columns[:start_col]) + column_names
+
     # Afficher le résultat
-    st.write(result_df)
+    st.write(input_df)
 
     # Option pour télécharger le fichier résultant
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        result_df.to_excel(writer, index=False, sheet_name='Sheet1')
+        input_df.to_excel(writer, index=False, sheet_name='Sheet1')
     output.seek(0)
     st.download_button(
         "Télécharger le fichier Excel après correspondance",
