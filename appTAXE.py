@@ -28,12 +28,11 @@ if uploaded_file:
 
     # Spécifiez les colonnes à utiliser
     base_columns = [0, 4, 5, 8, 18, 11, 13, 14, 21, 16]
+    column_names = ['CODE', 'SIRET PREF', 'RAISON SOCIALE', 'UAI 1', 'UAI 2', 'Adresse', 'Code postal', 'Ville', 'LIBELLE FORMATION', 'ADRESSE MAIL']
 
-    # Filtrer les colonnes
+    # Filtrer les colonnes et renommer
     base_df_filtered = base_df.iloc[:, base_columns]
-
-    # Renommer les colonnes
-    base_df_filtered.columns = ['CODE', 'SIRET PREF', 'RAISON SOCIALE', 'UAI 1', 'UAI 2', 'Adresse', 'Code postal', 'Ville', 'LIBELLE FORMATION', 'ADRESSE MAIL']
+    base_df_filtered.columns = column_names
 
     # Effectuer la correspondance
     result_df = perform_lookup(input_codes, base_df_filtered)
