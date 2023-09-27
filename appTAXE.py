@@ -12,6 +12,12 @@ def load_base_data():
 def perform_lookup(input_codes, base_df):
     filter_condition = base_df.iloc[:, 0].isin(input_codes)
     result_df = base_df[filter_condition]
+    
+    # Réindexation pour respecter l'ordre initial
+    result_df.set_index('CODE', inplace=True)
+    result_df = result_df.reindex(input_codes)
+    result_df.reset_index(inplace=True)
+    
     return result_df
 
 # Interface Streamlit
